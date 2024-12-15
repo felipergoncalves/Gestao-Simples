@@ -1,0 +1,100 @@
+<div class="login-page">
+  <!-- Esquerda: Logo, Nome, Descrição e Imagem com Cards -->
+  <div class="login-left">
+    <!-- Logo e textos -->
+    <div class="logo-section">
+      <div class="logo">
+        <img src="/assets/pages/login/logo.png" width="94" alt="Gestão simples" />
+      </div>
+      <div class="text">
+        <h1>GestãoSimples</h1>
+        <p>Painel de vendedor</p>
+      </div>
+    </div>
+
+    <!-- Imagem com Cards -->
+    <div class="image-section">
+      <img src="/assets/pages/login/hero.jpg" width="571" alt="Imagem principal" />
+      <div class="cards">
+        <div class="card card-1">
+          <img src="/assets/pages/login/card-1.svg" alt="">
+          <small>Acompanhe os produtos vendidos</small>
+        </div>
+        <div class="card card-2">
+          <img src="/assets/pages/login/card-2.svg" alt="">
+          <small>Gerencie seus anúncios</small>
+        </div>
+        <div class="card card-3">
+          <img src="/assets/pages/login/card-3.svg" alt="">
+          <small>Veja sua loja crescendo</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Direita: Formulário de Login -->
+  <div class="login-right">
+    <div class="form-container">
+      <h2>Acesse sua conta</h2>
+      <p>Informe seu e-mail e senha para entrar</p>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fas fa-envelope"></i>  <!-- Ícone de e-mail -->
+              </span>
+            </div>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-control"
+              placeholder="Seu e-mail cadastrado"
+            />
+          </div>
+          <div class="error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+            <small *ngIf="loginForm.get('email')?.errors?.['required']">O email é obrigatório.</small>
+            <small *ngIf="loginForm.get('email')?.errors?.['email']">O email não é válido.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fas fa-lock"></i>  <!-- Ícone de senha -->
+              </span>
+            </div>
+            <input
+              [type]="isPasswordVisible ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              class="form-control"
+              placeholder="Sua senha de acesso"
+            />
+            <div class="input-group-append">
+              <span class="input-group-text" (click)="togglePasswordVisibility()">
+                <i class="fas" [ngClass]="isPasswordVisible ? 'fa-eye-slash' : 'fa-eye'"></i>  <!-- Ícone de olho -->
+              </span>
+            </div>
+          </div>
+          <div class="error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            <small *ngIf="loginForm.get('password')?.errors?.['required']">A senha é obrigatória.</small>
+            <small *ngIf="loginForm.get('password')?.errors?.['minlength']">
+              A senha deve ter pelo menos 6 caracteres.
+            </small>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">
+          Acessar <i class="fas fa-arrow-right"></i>  <!-- Ícone de seta -->
+        </button>
+      </form>
+
+
+    </div>
+  </div>
+</div>

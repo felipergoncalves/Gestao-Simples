@@ -1,0 +1,29 @@
+<app-header></app-header>
+
+<div class="dashboard-container">
+  <!-- Título e subtítulo -->
+  <div class="header">
+    <h2>Últimos 30 dias</h2>
+    <p>Confira as estatísticas da sua loja no último mês</p>
+  </div>
+
+  <!-- Layout com cards e gráfico -->
+  <div class="content">
+    <!-- Seção da esquerda com os dois cards -->
+    <div class="left-section">
+      <div class="card">
+        <h3 class="card-value">1200</h3>
+        <p>Produtos vendidos</p>
+      </div>
+      <div class="card">
+        <h3 class="card-value">300</h3>
+        <p>Clientes que compraram</p>
+      </div>
+    </div>
+
+    <!-- Seção da direita com o gráfico -->
+    <div class="right-section">
+      <canvas id="salesChart"></canvas>
+    </div>
+  </div>
+</div>
