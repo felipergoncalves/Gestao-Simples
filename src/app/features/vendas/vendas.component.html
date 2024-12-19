@@ -1,0 +1,89 @@
+<app-header></app-header>
+
+<div class="sales-page">
+  <h2>Histórico de Vendas</h2>
+  <p>Acesse e gerencie seu histórico de vendas.</p>
+  <button class="btn btn-primary" (click)="openSaleModal()">Nova Venda</button>
+
+  <div class="page-content">
+    <div class="filter-section">
+      <app-filter (filterChanged)="onFilterChange($event)"></app-filter>
+    </div>
+
+    <div class="sales-section">
+      <div *ngIf="loading" class="loading-message">
+        <i class="bi bi-arrow-clockwise spin"></i> Carregando vendas...
+      </div>
+
+      <div *ngIf="!loading && filteredSales.length === 0" class="empty-message">
+        Nenhuma venda encontrada.
+      </div>
+
+      <div class="sales-list" *ngIf="!loading && filteredSales.length > 0">
+        <div class="sale-card" *ngFor="let sale of filteredSales">
+          <div class="sale-info">
+            <span class="sale-data client">{{ getCustomerName(sale.customerId) }}</span>
+            <span class="sale-data date">{{ formatSaleDate(sale.created_at) }}</span>
+            <span class="sale-data total">R$ {{ sale.total | number:'1.2-2' }}</span>
+
+            <div class="sale-actions">
+              <button class="custom-btn btn-danger">
+                <i class="bi bi-trash"></i>
+              </button>
+              <button class="custom-btn btn-info">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Nova Venda -->
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal">
+    <h3>Nova Venda</h3>
+    <form [formGroup]="saleForm" (ngSubmit)="saveSale()">
+
+      <!-- Cliente -->
+      <div class="form-group">
+        <label for="customer">Cliente</label>
+        <select id="customer" formControlName="customer_id" required>
+          <option *ngFor="let client of clients" [value]="client.id">{{ client.name }}</option>
+        </select>
+      </div>
+
+      <!-- Produtos Dinâmicos -->
+      <div formArrayName="products" *ngFor="let product of products.controls; let i = index">
+        <div [formGroupName]="i" class="product-item">
+          <select formControlName="product_id" required>
+            <option *ngFor="let prod of availableProducts" [value]="prod.id">
+              {{ prod.name }}
+            </option>
+          </select>
+
+          <input type="number" formControlName="quantity" min="1" placeholder="Quantidade" required />
+
+          <button type="button" class="btn btn-danger" (click)="removeProduct(i)">
+            Remover
+          </button>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-secondary" (click)="addProduct()">Adicionar Produto</button>
+
+      <!-- Total -->
+      <div class="form-group">
+        <label>Total: R$ {{ total | number: '1.2-2' }}</label>
+      </div>
+
+      <!-- Botões de Ação -->
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="saleForm.invalid">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,24 +1,22 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, HttpClientModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
-
-  email = '';
-  password = '';
   isPasswordVisible = false;
+  errorMessage = '';
 
   constructor(
     private fb: FormBuilder,
@@ -27,22 +25,31 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(4)]]
     });
   }
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value; // Pega os valores do formulário
-
-      if (this.authService.login(email, password)) {
-        this.router.navigate(['/dashboard']);
-      } else {
-        alert('Login inválido!');
-      }
-    } else {
-      alert('Preencha todos os campos corretamente.');
+    if (this.loginForm.invalid) {
+      this.errorMessage = 'Preencha todos os campos corretamente.';
+      return;
     }
+
+    this.isLoading = true;
+    const { email, password } = this.loginForm.value;
+
+    this.authService.login(email, password).subscribe({
+      next: (response) => {
+        localStorage.setItem('token', response.token);
+        this.router.navigate(['/dashboard']);
+      },
+      error: () => {
+        this.errorMessage = 'Falha no login. Verifique suas credenciais.';
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
   togglePasswordVisibility() {

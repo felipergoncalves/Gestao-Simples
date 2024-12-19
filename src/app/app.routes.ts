@@ -14,8 +14,16 @@ export const routes: Routes = [
     loadComponent: () => import('./features/products/products.component').then(m => m.ProductsComponent)
   },
   {
+    path: 'produtos/details',
+    loadComponent: () => import('./features/product-detail/product-detail.component').then(m => m.ProductDetailComponent)
+  },
+  {
     path: 'clientes',
     loadComponent: () => import('./features/customers/customers.component').then(m => m.CustomersComponent)
+  },
+  {
+    path: 'vendas',
+    loadComponent: () => import('./features/vendas/vendas.component').then(m => m.VendasComponent)
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
