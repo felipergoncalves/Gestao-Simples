@@ -1,0 +1,75 @@
+<app-header></app-header>
+
+<div class="product-details" *ngIf="!isLoading; else loadingTemplate">
+  <a routerLink="/produtos" class="back-link">← Voltar</a>
+  <h1>Editar produto</h1>
+  <p>Gerencie as informações do produto cadastrado</p>
+  <div class="w-100 mb-3 d-flex justify-content-end">
+    <button class="btn btn-outline-danger" (click)="openConfirmModal()">
+      <i class="bi bi-trash"></i> Excluir
+    </button>
+  </div>
+
+  <div class="product-container">
+    <!-- Imagem do produto -->
+    <div class="product-image">
+      <img
+        [src]="product.image_url"
+        [alt]="product.name || 'Imagem do produto'"
+      />
+    </div>
+
+    <!-- Formulário de edição -->
+    <div class="product-form">
+
+      <h5>Dados do produto</h5>
+
+      <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
+        <!-- Título -->
+        <label for="title">TÍTULO</label>
+        <input id="title" formControlName="name" />
+
+        <!-- Valor -->
+        <label for="price">VALOR</label>
+        <input
+          id="price"
+          type="number"
+          step="0.01"
+          formControlName="price"
+        />
+        <label for="stock">ESTOQUE</label>
+        <input id="stock" formControlName="stock" />
+
+        <!-- Descrição -->
+        <label for="description">DESCRIÇÃO</label>
+        <input
+          id="description"
+          formControlName="description"
+        />
+
+        <!-- Botões -->
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="cancelEdit()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-save">
+            Salvar e atualizar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmação -->
+<app-confirm-modal
+  *ngIf="isModalOpen"
+  [title]="'Excluir produto'"
+  [message]="'Tem certeza de que deseja excluir este produto?'"
+  (confirm)="deleteProduct()"
+  (cancel)="closeConfirmModal()"
+></app-confirm-modal>
+
+<ng-template #loadingTemplate>
+  <div class="loading">Carregando...</div>
+</ng-template>

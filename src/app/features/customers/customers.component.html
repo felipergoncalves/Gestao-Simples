@@ -1,2 +1,170 @@
 <app-header></app-header>
-<p>customers works!</p>
+
+<div class="clients-page">
+  <h2>Seus clientes</h2>
+  <p>Acesse e gerencie a sua lista de clientes.</p>
+  <button class="btn btn-primary" (click)="openModal()">Novo cliente</button>
+
+  <div class="page-content">
+    <div class="filter-section">
+      <app-filter (filterChanged)="onFilterChange($event)"></app-filter>
+    </div>
+
+    <div class="clients-section">
+      <div *ngIf="loading" class="loading-message">
+        <i class="bi bi-arrow-clockwise spin"></i> Carregando clientes...
+      </div>
+
+      <div *ngIf="!loading && filteredClients.length === 0" class="empty-message">
+        Nenhum cliente encontrado.
+      </div>
+
+      <div class="clients-list" *ngIf="!loading && filteredClients.length > 0">
+        <div class="client-card" *ngFor="let client of filteredClients">
+          <div class="client-info">
+            <span class="client-data name">{{ client.name }}</span>
+            <span class="client-data email">{{ client.email }}</span>
+            <span class="client-data phone">{{ client.phone }}</span>
+
+            <div class="client-actions">
+              <button class="custom-btn btn-danger" (click)="openConfirmModal()">
+                <i class="bi bi-trash"></i>
+              </button>
+              <button class="custom-btn btn-warning" (click)="openEditModal(client)">
+                <i class="bi bi-pencil"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmação -->
+<app-confirm-modal
+  *ngIf="isModalOpen"
+  [title]="'Excluir cliente'"
+  [message]="'Tem certeza de que deseja excluir este cliente?'"
+  (cancel)="closeConfirmModal()"
+></app-confirm-modal>
+
+<!-- Modal de Cadastro de Novo Produto -->
+<!-- Modal de Cadastro/Edição de Cliente -->
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal">
+    <h3>{{ editingClient ? 'Editar Cliente' : 'Novo Cliente' }}</h3>
+    <form>
+      <div class="form-grid">
+        <!-- Name -->
+        <div class="form-group">
+          <label for="name">Nome</label>
+          <input
+            id="name"
+            type="text"
+            *ngIf="editingClient; else newClientField"
+            [(ngModel)]="editingClient.name"
+            name="name"
+          />
+          <ng-template #newClientField>
+            <input
+              id="name"
+              type="text"
+              [(ngModel)]="newClient.name"
+              name="name"
+            />
+          </ng-template>
+        </div>
+
+        <!-- CPF -->
+        <div class="form-group">
+          <label for="cpf">CPF</label>
+          <input
+            id="cpf"
+            type="text"
+            *ngIf="editingClient; else newClientField"
+            [(ngModel)]="editingClient.cpf"
+            name="cpf"
+          />
+          <ng-template #newClientField>
+            <input
+              id="cpf"
+              type="text"
+              [(ngModel)]="newClient.cpf"
+              name="cpf"
+            />
+          </ng-template>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input
+            id="email"
+            type="text"
+            *ngIf="editingClient; else newClientField"
+            [(ngModel)]="editingClient.email"
+            name="email"
+          />
+          <ng-template #newClientField>
+            <input
+              id="email"
+              type="text"
+              [(ngModel)]="newClient.email"
+              name="email"
+            />
+          </ng-template>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label for="phone">Telefone</label>
+          <input
+            id="phone"
+            type="text"
+            *ngIf="editingClient; else newClientField"
+            [(ngModel)]="editingClient.phone"
+            name="phone"
+          />
+          <ng-template #newClientField>
+            <input
+              id="phone"
+              type="text"
+              [(ngModel)]="newClient.phone"
+              name="phone"
+            />
+          </ng-template>
+        </div>
+
+        <!-- Address -->
+        <div class="form-group">
+          <label for="address">Endereço</label>
+          <input
+            id="address"
+            type="text"
+            *ngIf="editingClient; else newClientField"
+            [(ngModel)]="editingClient.address"
+            name="address"
+          />
+          <ng-template #newClientField>
+            <input
+              id="address"
+              type="text"
+              [(ngModel)]="newClient.address"
+              name="address"
+            />
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Botões -->
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="saveClient()">
+          {{ editingClient ? 'Salvar Alterações' : 'Salvar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

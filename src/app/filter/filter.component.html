@@ -1,0 +1,11 @@
+<div class="filter-container">
+  <h6>Filtrar</h6>
+  <div class="filter-input">
+    <i class="bi bi-search"></i>
+    <input
+      type="text"
+      placeholder="Pesquisar produto..."
+      [(ngModel)]="searchQuery" />
+  </div>
+  <button (click)="applyFilter()" class="btn btn-primary">Aplicar filtro</button>
+</div>

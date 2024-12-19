@@ -1,0 +1,35 @@
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 20px;
+  background-color: #fff;
+  padding: 1.5rem;
+}
+
+.filter-input {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  border-bottom: solid 1px #adadad;
+}
+
+.filter-input input {
+  padding-left: 30px;
+  padding: 10px;
+  font-size: 16px;
+  border: 0;
+  width: 100%;
+  outline: 0;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #5EC5FD;
+}

@@ -84,7 +84,7 @@
           <div class="error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
             <small *ngIf="loginForm.get('password')?.errors?.['required']">A senha é obrigatória.</small>
             <small *ngIf="loginForm.get('password')?.errors?.['minlength']">
-              A senha deve ter pelo menos 6 caracteres.
+              A senha deve ter pelo menos 4 caracteres.
             </small>
           </div>
         </div>

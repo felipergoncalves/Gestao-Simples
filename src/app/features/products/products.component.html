@@ -1,2 +1,104 @@
 <app-header></app-header>
-<p>products works!</p>
+
+<div class="products-page">
+  <h2>Seus produtos</h2>
+  <p>Acesse e gerencie a sua lista de produtos à venda.</p>
+  <button class="btn btn-primary" (click)="openModal()">Novo produto</button>
+
+  <div class="page-content">
+    <div class="filter-section">
+      <app-filter (filterChanged)="onFilterChange($event)"></app-filter>
+    </div>
+
+    <div class="products-section">
+      <div *ngIf="loading" class="loading-message">
+        <i class="bi bi-arrow-clockwise spin"></i> Carregando produtos...
+      </div>
+
+      <div *ngIf="!loading && filteredProducts.length === 0" class="empty-message">
+        Nenhum produto encontrado.
+      </div>
+
+      <div class="products-list" *ngIf="!loading && filteredProducts.length > 0">
+        <div
+          class="product-card"
+          *ngFor="let product of filteredProducts"
+          [routerLink]="['/produtos/details']"
+        >
+          <img [src]="product.image_url" alt="{{ product.name }}" />
+
+          <div class="product-info">
+            <div class="d-flex justify-content-between">
+              <h3>{{ product.name }}</h3>
+              <p class="price"><span>R$ </span>{{ product.price | number: '1.2-2' }}</p>
+            </div>
+            <p class="description">{{ product.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Cadastro de Novo Produto -->
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal">
+    <h3>Novo Produto</h3>
+    <form>
+      <div class="form-grid">
+        <!-- Name -->
+        <div class="form-group">
+          <label for="name">Nome</label>
+          <input id="name" type="text" [(ngModel)]="newProduct.name" name="name" />
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+          <label for="price">Preço</label>
+          <input id="price" type="number" step="0.01" [(ngModel)]="newProduct.price" name="price" />
+        </div>
+
+        <!-- Stock -->
+        <div class="form-group">
+          <label for="stock">Estoque</label>
+          <input id="stock" type="number" [(ngModel)]="newProduct.stock" name="stock" />
+        </div>
+
+        <!-- Image Upload -->
+        <div class="form-group">
+            <!-- Input de arquivo -->
+          <label for="image">Imagem</label>
+          <input
+            id="image"
+            type="file"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+          />
+          <img
+            *ngIf="imagePreview"
+            [src]="imagePreview"
+            alt="Pré-visualização da imagem"
+            class="image-preview"
+          />
+        </div>
+      </div>
+
+      <!-- Description (full width) -->
+      <div class="form-group full-width">
+        <label for="description">Descrição</label>
+        <textarea
+          id="description"
+          rows="3"
+          [(ngModel)]="newProduct.description"
+          name="description"
+        ></textarea>
+      </div>
+
+      <!-- Botões -->
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="saveProduct()">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
