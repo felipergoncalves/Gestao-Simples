@@ -72,7 +72,7 @@ export class VendasComponent implements OnInit {
   calculateTotal() {
     this.total = this.products.controls.reduce((sum, control) => {
       const product = this.availableProducts.find(
-        (p) => p.id === control.value.product_id
+        (p) => p.id == control.value.product_id
       );
       const subtotal = (product?.price || 0) * control.value.quantity;
       return sum + subtotal;
@@ -81,7 +81,6 @@ export class VendasComponent implements OnInit {
 
   saveSale() {
     const customerId = this.saleForm.get('customer_id')?.value;
-
     if (!customerId || customerId === '') {
       console.error('Cliente não selecionado.');
       return;
@@ -102,13 +101,14 @@ export class VendasComponent implements OnInit {
       total: this.total,
     };
 
-    this.salesService.createSale(saleData).subscribe({
-      next: () => {
-        console.log('Venda cadastrada com sucesso!');
-        this.closeModal();
-      },
-      error: (err) => console.error('Erro ao cadastrar venda:', err),
-    });
+    console.log(saleData);
+    // this.salesService.createSale(saleData).subscribe({
+    //   next: () => {
+    //     console.log('Venda cadastrada com sucesso!');
+    //     this.closeModal();
+    //   },
+    //   error: (err) => console.error('Erro ao cadastrar venda:', err),
+    // });
   }
 
   closeModal() {
@@ -151,7 +151,7 @@ export class VendasComponent implements OnInit {
   }
 
   getCustomerName(customerId: string): string {
-    const customer = this.clients.find((c) => c.id === customerId);
+    const customer = this.clients.find((c) => c.cpf === customerId);
     return customer ? customer.name : 'Cliente não encontrado';
   }
 

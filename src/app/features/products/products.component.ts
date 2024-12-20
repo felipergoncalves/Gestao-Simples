@@ -21,14 +21,15 @@ export class ProductsComponent {
     price: null,
     stock: null,
     description: '',
-    image_url: null,
-    brand: '',
   };
   imagePreview: string | undefined;
   loading: boolean = false;
   filteredProducts: any[] = [];
-
   constructor(private productService: ProductsService) {}
+
+  ngOnInit() {
+    this.fetchProducts();
+  }
 
   openModal(): void {
     this.showModal = true;
@@ -45,10 +46,7 @@ export class ProductsComponent {
       price: null,
       stock: null,
       description: '',
-      image_url: null,
-      brand: '',
     };
-    this.imagePreview = undefined;
   }
 
   onFilterChange(searchQuery: string) {
@@ -74,19 +72,16 @@ export class ProductsComponent {
   // Função para salvar o produto
   saveProduct(): void {
     const formData = new FormData();
-    formData.append('name', this.newProduct.name);
-    formData.append('price', this.newProduct.price);
-    formData.append('stock', this.newProduct.stock);
-    formData.append('description', this.newProduct.description);
-    formData.append('brand', this.newProduct.brand);
-
+    formData.set('name', this.newProduct.name);
+    formData.set('price', this.newProduct.price.toString());
+    formData.set('stock', this.newProduct.stock.toString());
+    formData.set('description', this.newProduct.description);
+  
+    console.log('New Product:', this.newProduct);
     // Se uma imagem foi selecionada, anexe-a ao formData
-    if (this.newProduct.image_url) {
-      formData.append('image', this.newProduct.image_url, this.newProduct.image_url.name);
-    }
 
     // Enviar os dados para o backend
-    this.productService.createProduct(formData).subscribe({
+    this.productService.createProduct(this.newProduct).subscribe({
       next: () => {
         alert('Produto cadastrado com sucesso!');
         this.closeModal();  // Fechar o modal após sucesso
@@ -95,6 +90,16 @@ export class ProductsComponent {
         console.error('Erro ao cadastrar produto:', err);
         alert('Erro ao cadastrar produto.');
       },
+    });
+  }
+
+  fetchProducts() {
+    this.productService.getProducts().subscribe({
+      next: (data) => {
+        this.products = data;
+        this.filteredProducts = data;
+      },
+      error: (err) => console.error('Erro ao buscar produtos:', err),
     });
   }
 }

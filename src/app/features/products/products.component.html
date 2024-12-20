@@ -25,8 +25,6 @@
           *ngFor="let product of filteredProducts"
           [routerLink]="['/produtos/', product.id]"
         >
-          <img [src]="product.image_url" alt="{{ product.name }}" />
-
           <div class="product-info">
             <div class="d-flex justify-content-between">
               <h3>{{ product.name }}</h3>
@@ -82,22 +80,6 @@
           />
         </div>
 
-        <!-- Imagem -->
-        <div class="form-group">
-          <label for="image">Imagem</label>
-          <input
-            id="image"
-            type="file"
-            (change)="onFileSelected($event)"
-            accept="image/*"
-          />
-          <img
-            *ngIf="imagePreview"
-            [src]="imagePreview"
-            alt="Pré-visualização da imagem"
-            class="image-preview"
-          />
-        </div>
       </div>
 
       <!-- Descrição -->
