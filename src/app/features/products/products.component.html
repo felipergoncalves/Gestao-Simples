@@ -23,7 +23,7 @@
         <div
           class="product-card"
           *ngFor="let product of filteredProducts"
-          [routerLink]="['/produtos/details']"
+          [routerLink]="['/produtos/', product.id]"
         >
           <img [src]="product.image_url" alt="{{ product.name }}" />
 
@@ -40,33 +40,50 @@
   </div>
 </div>
 
-<!-- Modal de Cadastro de Novo Produto -->
 <div class="modal-overlay" *ngIf="showModal">
   <div class="modal">
     <h3>Novo Produto</h3>
-    <form>
+    <form (ngSubmit)="saveProduct()">
       <div class="form-grid">
-        <!-- Name -->
+        <!-- Nome -->
         <div class="form-group">
           <label for="name">Nome</label>
-          <input id="name" type="text" [(ngModel)]="newProduct.name" name="name" />
+          <input
+            id="name"
+            type="text"
+            [(ngModel)]="newProduct.name"
+            name="name"
+            required
+          />
         </div>
 
-        <!-- Price -->
+        <!-- Preço -->
         <div class="form-group">
           <label for="price">Preço</label>
-          <input id="price" type="number" step="0.01" [(ngModel)]="newProduct.price" name="price" />
+          <input
+            id="price"
+            type="number"
+            step="0.01"
+            [(ngModel)]="newProduct.price"
+            name="price"
+            required
+          />
         </div>
 
-        <!-- Stock -->
+        <!-- Estoque -->
         <div class="form-group">
           <label for="stock">Estoque</label>
-          <input id="stock" type="number" [(ngModel)]="newProduct.stock" name="stock" />
+          <input
+            id="stock"
+            type="number"
+            [(ngModel)]="newProduct.stock"
+            name="stock"
+            required
+          />
         </div>
 
-        <!-- Image Upload -->
+        <!-- Imagem -->
         <div class="form-group">
-            <!-- Input de arquivo -->
           <label for="image">Imagem</label>
           <input
             id="image"
@@ -83,7 +100,7 @@
         </div>
       </div>
 
-      <!-- Description (full width) -->
+      <!-- Descrição -->
       <div class="form-group full-width">
         <label for="description">Descrição</label>
         <textarea
@@ -97,7 +114,7 @@
       <!-- Botões -->
       <div class="modal-actions">
         <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
-        <button type="button" class="btn btn-primary" (click)="saveProduct()">Salvar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
       </div>
     </form>
   </div>

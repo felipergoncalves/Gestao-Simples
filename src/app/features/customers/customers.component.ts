@@ -20,12 +20,13 @@ export class CustomersComponent implements OnInit {
   isModalOpen: boolean = false;
   showModal: boolean = false;
   editingClient: any = null;
+  selectedClientId: string | null = null;
   newClient: any = {
     cpf: '',
     name: '',
-    address: '',
+    email: '',
     phone: '',
-    email: ''
+    address: '',
   };
 
   constructor(private customerService: CustomersService) {}
@@ -59,21 +60,43 @@ export class CustomersComponent implements OnInit {
     }, 500);
   }
 
-  openConfirmModal() {
+  openConfirmModal(client: any) {
+    this.selectedClientId = client;
     this.isModalOpen = true;
   }
 
   closeConfirmModal() {
     this.isModalOpen = false;
+    this.selectedClientId = null;
   }
 
   openModal() {
+    this.editingClient = null;
     this.showModal = true;
   }
 
   closeModal() {
     this.showModal = false;
     this.resetForm();
+  }
+
+  cleanDocument(cpf: string): string {
+    return cpf.toString().replace(/[.\-]/g, '');
+  }
+
+  deleteCustomer() {
+    if (this.selectedClientId) {
+      this.customerService.deleteCustomer(this.cleanDocument(this.selectedClientId)).subscribe({
+        next: () => {
+          console.log('Cliente excluído com sucesso');
+          this.closeConfirmModal();  // Fecha o modal
+          this.fetchClients();  // Recarrega a lista de clientes
+        },
+        error: (err) => {
+          console.error('Erro ao excluir cliente:', err);
+        }
+      });
+    }
   }
 
   saveClient() {
@@ -96,16 +119,6 @@ export class CustomersComponent implements OnInit {
         error: (err) => console.error('Erro ao cadastrar cliente:', err)
       });
     }
-  }
-
-  deleteClient(clientId: number) {
-    this.customerService.deleteCustomer(clientId).subscribe({
-      next: () => {
-        alert('Cliente excluído com sucesso!');
-        this.fetchClients();
-      },
-      error: () => alert('Erro ao excluir cliente.')
-    });
   }
 
   openEditModal(client: any) {

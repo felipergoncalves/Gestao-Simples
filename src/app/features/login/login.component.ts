@@ -40,16 +40,21 @@ export class LoginComponent {
 
     this.authService.login(email, password).subscribe({
       next: (response) => {
-        localStorage.setItem('token', response.token);
-        this.router.navigate(['/dashboard']);
+        if (response.session?.access_token) {
+          console.log("Token aqui: ", response.session?.access_token)
+          this.authService.setToken(response.session.access_token); // Salva o token no localStorage
+          this.router.navigate(['/dashboard']);  // Navega para a página do dashboard após o login
+        }
       },
-      error: () => {
-        this.errorMessage = 'Falha no login. Verifique suas credenciais.';
+      error: (err) => {
+        console.error('Erro ao fazer login:', err);
+        alert('Login inválido!');
       },
       complete: () => {
         this.isLoading = false;
       }
     });
+
   }
 
   togglePasswordVisibility() {
