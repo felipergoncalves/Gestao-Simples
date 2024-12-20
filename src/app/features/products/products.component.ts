@@ -76,7 +76,7 @@ export class ProductsComponent {
     formData.set('price', this.newProduct.price.toString());
     formData.set('stock', this.newProduct.stock.toString());
     formData.set('description', this.newProduct.description);
-  
+
     console.log('New Product:', this.newProduct);
     // Se uma imagem foi selecionada, anexe-a ao formData
 
@@ -85,6 +85,7 @@ export class ProductsComponent {
       next: () => {
         alert('Produto cadastrado com sucesso!');
         this.closeModal();  // Fechar o modal após sucesso
+        this.fetchProducts();
       },
       error: (err) => {
         console.error('Erro ao cadastrar produto:', err);

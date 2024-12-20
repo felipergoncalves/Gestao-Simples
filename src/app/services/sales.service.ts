@@ -32,4 +32,28 @@ export class SalesService {
     return this.http.post(this.apiUrl, saleData, { headers });
   }
 
+  getSalesByCustomerId(customerId: string): Observable<any> {
+    const token = this.authService.getToken(); // Token do usuário autenticado
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.get(`${this.apiUrl}/${customerId}`, { headers });
+  }
+
+  getSalesReportByCustomerId(customerId: string): Observable<any> {
+    const token = this.authService.getToken(); // Token do usuário autenticado
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.get(`${this.apiUrl}/report/${customerId}`, { headers });
+  }
+
+  getSalesByPeriod(startDate: string, endDate: string): Observable<any> {
+    const token = this.authService.getToken(); // Token do usuário autenticado
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.post(
+      `${this.apiUrl}/report/period`,
+      { start_date: startDate, end_date: endDate },
+      { headers }
+    );
+  }
 }

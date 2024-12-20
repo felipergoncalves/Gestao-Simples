@@ -101,14 +101,15 @@ export class VendasComponent implements OnInit {
       total: this.total,
     };
 
-    console.log(saleData);
-    // this.salesService.createSale(saleData).subscribe({
-    //   next: () => {
-    //     console.log('Venda cadastrada com sucesso!');
-    //     this.closeModal();
-    //   },
-    //   error: (err) => console.error('Erro ao cadastrar venda:', err),
-    // });
+    console.log('Dados enviados para o back-end:', saleData);
+    this.salesService.createSale(saleData).subscribe({
+      next: () => {
+        alert('Venda criada com sucesso!');
+        this.closeModal();
+        this.fetchSales();
+      },
+      error: (err) => console.error('Erro ao cadastrar venda:', err),
+    });
   }
 
   closeModal() {

@@ -4,11 +4,11 @@
     <!-- Logo e textos -->
     <div class="logo-section">
       <div class="logo">
-        <img src="/assets/pages/login/logo.png" width="94" alt="Gestão simples" />
+        <img src="/assets/pages/login/main-logo.png" width="136" alt="Condomini" />
       </div>
       <div class="text">
-        <h1>GestãoSimples</h1>
-        <p>Painel de vendedor</p>
+        <!-- <h1>Condomini</h1> -->
+        <!-- <p>Painel de vendedor</p> -->
       </div>
     </div>
 
@@ -32,6 +32,8 @@
     </div>
   </div>
 
+  <app-feedback-message [message]="feedbackMessage" [type]="feedbackType"></app-feedback-message>
+
   <!-- Direita: Formulário de Login -->
   <div class="login-right">
     <div class="form-container">
@@ -41,11 +43,11 @@
         <div class="form-group">
           <label for="email">Email</label>
           <div class="input-group">
-            <div class="input-group-prepend">
+            <!-- <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fas fa-envelope"></i>  <!-- Ícone de e-mail -->
+                <i class="fas fa-envelope"></i>  Ícone de e-mail
               </span>
-            </div>
+            </div> -->
             <input
               type="email"
               id="email"
@@ -63,11 +65,11 @@
         <div class="form-group">
           <label for="password">Senha</label>
           <div class="input-group">
-            <div class="input-group-prepend">
+            <!-- <div class="input-group-prepend">
               <span class="input-group-text">
-                <i class="fas fa-lock"></i>  <!-- Ícone de senha -->
+                <i class="fas fa-lock"></i>  Ícone de senha
               </span>
-            </div>
+            </div> -->
             <input
               [type]="isPasswordVisible ? 'text' : 'password'"
               id="password"
@@ -75,11 +77,11 @@
               class="form-control"
               placeholder="Sua senha de acesso"
             />
-            <div class="input-group-append">
+            <!-- <div class="input-group-append">
               <span class="input-group-text" (click)="togglePasswordVisibility()">
-                <i class="fas" [ngClass]="isPasswordVisible ? 'fa-eye-slash' : 'fa-eye'"></i>  <!-- Ícone de olho -->
+                <i class="fas" [ngClass]="isPasswordVisible ? 'fa-eye-slash' : 'fa-eye'"></i>  Ícone de olho
               </span>
-            </div>
+            </div> -->
           </div>
           <div class="error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
             <small *ngIf="loginForm.get('password')?.errors?.['required']">A senha é obrigatória.</small>
@@ -89,8 +91,13 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">
-          Acessar <i class="fas fa-arrow-right"></i>  <!-- Ícone de seta -->
+        <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || isLoading">
+          <ng-container *ngIf="!isLoading; else loading">
+            Acessar <i class="fas fa-arrow-right"></i>
+          </ng-container>
+          <ng-template #loading>
+            <span class="spinner"></span> Carregando...
+          </ng-template>
         </button>
       </form>
 
