@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { HeaderComponent } from '../../core/header/header.component';
-import { FilterComponent } from '../../filter/filter.component';
-import { FormBuilder, FormArray, Validators, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { FormBuilder, FormArray, FormGroup, Validators, FormGroupName, ReactiveFormsModule } from '@angular/forms';
+import { SalesService } from '../../services/sales.service';
 import { CustomersService } from '../../services/customers.service';
 import { ProductsService } from '../../services/products.service';
-import { SalesService } from '../../services/sales.service';
+import { HeaderComponent } from '../../core/header/header.component';
+import { CommonModule } from '@angular/common';
+import { FilterComponent } from '../../filter/filter.component';
 
 @Component({
   selector: 'app-vendas',
   standalone: true,
-  imports: [HeaderComponent, FilterComponent, CommonModule, ReactiveFormsModule],
+  imports: [HeaderComponent, CommonModule, ReactiveFormsModule, FilterComponent],
   templateUrl: './vendas.component.html',
   styleUrls: ['./vendas.component.scss'],
 })
@@ -26,9 +26,9 @@ export class VendasComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private salesService: SalesService,
     private customersService: CustomersService,
-    private productsService: ProductsService,
-    private salesService: SalesService
+    private productsService: ProductsService
   ) {}
 
   ngOnInit() {
@@ -46,13 +46,22 @@ export class VendasComponent implements OnInit {
     return this.saleForm.get('products') as FormArray;
   }
 
+  onProductChange(index: number) {
+    const product = this.products.at(index).get('product_id')?.value;
+    this.calculateTotal();  // Recalcula o total sempre que mudar
+  }
+
   addProduct() {
-    this.products.push(
-      this.fb.group({
-        product_id: [null, Validators.required],
-        quantity: [1, [Validators.required, Validators.min(1)]],
-      })
-    );
+    const productGroup = this.fb.group({
+      product_id: [null, Validators.required],
+      quantity: [1, [Validators.required, Validators.min(1)]],
+    });
+
+    // Recalcula o total sempre que o valor do produto ou quantidade mudar
+    productGroup.valueChanges.subscribe(() => this.calculateTotal());
+
+    this.products.push(productGroup);
+    this.calculateTotal(); // Recalcula ao adicionar o produto
   }
 
   removeProduct(index: number) {
@@ -65,12 +74,28 @@ export class VendasComponent implements OnInit {
       const product = this.availableProducts.find(
         (p) => p.id === control.value.product_id
       );
-      return sum + (product?.price || 0) * control.value.quantity;
+      const subtotal = (product?.price || 0) * control.value.quantity;
+      return sum + subtotal;
     }, 0);
   }
 
   saveSale() {
-    if (this.saleForm.invalid) return;
+    const customerId = this.saleForm.get('customer_id')?.value;
+
+    if (!customerId || customerId === '') {
+      console.error('Cliente não selecionado.');
+      return;
+    }
+
+    if (this.products.length === 0) {
+      console.error('Nenhum produto adicionado.');
+      return;
+    }
+
+    if (this.total <= 0) {
+      console.error('Total inválido.');
+      return;
+    }
 
     const saleData = {
       ...this.saleForm.value,
@@ -102,7 +127,10 @@ export class VendasComponent implements OnInit {
 
   fetchProducts() {
     this.productsService.getProducts().subscribe({
-      next: (data) => (this.availableProducts = data),
+      next: (data) => {
+        this.availableProducts = data;
+        this.calculateTotal(); // Recalcula o total após carregar produtos
+      },
       error: (err) => console.error('Erro ao buscar produtos:', err),
     });
   }
@@ -122,7 +150,7 @@ export class VendasComponent implements OnInit {
     });
   }
 
-  getCustomerName(customerId: number): string {
+  getCustomerName(customerId: string): string {
     const customer = this.clients.find((c) => c.id === customerId);
     return customer ? customer.name : 'Cliente não encontrado';
   }

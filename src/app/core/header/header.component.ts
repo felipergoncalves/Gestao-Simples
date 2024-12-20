@@ -13,7 +13,7 @@ export class HeaderComponent {
   constructor(private router: Router, private authService: AuthService) {}
 
   logout() {
-    this.authService.logout();  // Método para fazer logout
-    this.router.navigate(['/login']);  // Redireciona para a página de login
+    this.authService.logout();
+    this.router.navigate(['/login']);  // Navega para a página de login após o logout
   }
 }

@@ -27,7 +27,7 @@
             <span class="client-data phone">{{ client.phone }}</span>
 
             <div class="client-actions">
-              <button class="custom-btn btn-danger" (click)="openConfirmModal()">
+              <button class="custom-btn btn-danger" (click)="openConfirmModal(client.cpf)">
                 <i class="bi bi-trash"></i>
               </button>
               <button class="custom-btn btn-warning" (click)="openEditModal(client)">
@@ -46,10 +46,10 @@
   *ngIf="isModalOpen"
   [title]="'Excluir cliente'"
   [message]="'Tem certeza de que deseja excluir este cliente?'"
+  (confirm)="deleteCustomer()"
   (cancel)="closeConfirmModal()"
 ></app-confirm-modal>
 
-<!-- Modal de Cadastro de Novo Produto -->
 <!-- Modal de Cadastro/Edição de Cliente -->
 <div class="modal-overlay" *ngIf="showModal">
   <div class="modal">
@@ -62,11 +62,11 @@
           <input
             id="name"
             type="text"
-            *ngIf="editingClient; else newClientField"
+            *ngIf="editingClient; else newClientName"
             [(ngModel)]="editingClient.name"
             name="name"
           />
-          <ng-template #newClientField>
+          <ng-template #newClientName>
             <input
               id="name"
               type="text"
@@ -82,11 +82,11 @@
           <input
             id="cpf"
             type="text"
-            *ngIf="editingClient; else newClientField"
+            *ngIf="editingClient; else newClientDocument"
             [(ngModel)]="editingClient.cpf"
             name="cpf"
           />
-          <ng-template #newClientField>
+          <ng-template #newClientDocument>
             <input
               id="cpf"
               type="text"
@@ -102,11 +102,11 @@
           <input
             id="email"
             type="text"
-            *ngIf="editingClient; else newClientField"
+            *ngIf="editingClient; else newClientEmail"
             [(ngModel)]="editingClient.email"
             name="email"
           />
-          <ng-template #newClientField>
+          <ng-template #newClientEmail>
             <input
               id="email"
               type="text"
@@ -122,11 +122,11 @@
           <input
             id="phone"
             type="text"
-            *ngIf="editingClient; else newClientField"
+            *ngIf="editingClient; else newClientPhone"
             [(ngModel)]="editingClient.phone"
             name="phone"
           />
-          <ng-template #newClientField>
+          <ng-template #newClientPhone>
             <input
               id="phone"
               type="text"
@@ -142,11 +142,11 @@
           <input
             id="address"
             type="text"
-            *ngIf="editingClient; else newClientField"
+            *ngIf="editingClient; else newClientAddress"
             [(ngModel)]="editingClient.address"
             name="address"
           />
-          <ng-template #newClientField>
+          <ng-template #newClientAddress>
             <input
               id="address"
               type="text"

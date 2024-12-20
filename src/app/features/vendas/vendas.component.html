@@ -51,14 +51,16 @@
       <div class="form-group">
         <label for="customer">Cliente</label>
         <select id="customer" formControlName="customer_id" required>
+          <option value="" disabled selected>Selecione um cliente</option>
           <option *ngFor="let client of clients" [value]="client.id">{{ client.name }}</option>
         </select>
       </div>
 
+
       <!-- Produtos Dinâmicos -->
       <div formArrayName="products" *ngFor="let product of products.controls; let i = index">
         <div [formGroupName]="i" class="product-item">
-          <select formControlName="product_id" required>
+          <select formControlName="product_id" required (change)="onProductChange(i)">
             <option *ngFor="let prod of availableProducts" [value]="prod.id">
               {{ prod.name }}
             </option>
