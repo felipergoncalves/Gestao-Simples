@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { FeedbackMessageComponent } from '../../shared/feedback-message/feedback-message.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, HttpClientModule],
+  imports: [ReactiveFormsModule, CommonModule, HttpClientModule, FeedbackMessageComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -17,6 +18,9 @@ export class LoginComponent {
   isLoading = false;
   isPasswordVisible = false;
   errorMessage = '';
+  feedbackMessage = '';
+  feedbackType: 'success' | 'error' = 'success';
+
 
   constructor(
     private fb: FormBuilder,
@@ -31,7 +35,7 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.invalid) {
-      this.errorMessage = 'Preencha todos os campos corretamente.';
+      this.showFeedback('Preencha todos os campos corretamente.', 'error');
       return;
     }
 
@@ -43,18 +47,28 @@ export class LoginComponent {
         if (response.session?.access_token) {
           console.log("Token aqui: ", response.session?.access_token)
           this.authService.setToken(response.session.access_token); // Salva o token no localStorage
+          this.showFeedback('Login realizado com sucesso!', 'success');
           this.router.navigate(['/dashboard']);  // Navega para a página do dashboard após o login
         }
       },
       error: (err) => {
-        console.error('Erro ao fazer login:', err);
-        alert('Login inválido!');
+        this.showFeedback('Erro ao fazer login! Verifique seus dados.', 'error');
+        // alert('Login inválido!');
       },
       complete: () => {
         this.isLoading = false;
       }
     });
 
+  }
+
+  showFeedback(message: string, type: 'success' | 'error') {
+    this.feedbackMessage = message;
+    this.feedbackType = type;
+
+    setTimeout(() => {
+      this.feedbackMessage = '';
+    }, 5000);
   }
 
   togglePasswordVisibility() {

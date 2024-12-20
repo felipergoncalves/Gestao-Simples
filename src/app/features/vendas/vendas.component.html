@@ -27,12 +27,12 @@
             <span class="sale-data total">R$ {{ sale.total | number:'1.2-2' }}</span>
 
             <div class="sale-actions">
-              <button class="custom-btn btn-danger">
+              <!-- <button class="custom-btn btn-danger">
                 <i class="bi bi-trash"></i>
-              </button>
-              <button class="custom-btn btn-info">
+              </button> -->
+              <!-- <button class="custom-btn btn-info">
                 <i class="bi bi-eye"></i>
-              </button>
+              </button> -->
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@
         <label for="customer">Cliente</label>
         <select id="customer" formControlName="customer_id" required>
           <option value="" disabled selected>Selecione um cliente</option>
-          <option *ngFor="let client of clients" [value]="client.id">{{ client.name }}</option>
+          <option *ngFor="let client of clients" [value]="client.cpf">{{ client.name }}</option>
         </select>
       </div>
 
